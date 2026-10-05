@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PRINTO - اطبع اللي محتاجه</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f6f7;--card:#fff;--ink:#16161a;--mute:#6b6b76;--line:#e4e4e8;--or:#ff7a00;--nav:#0d0d10;--ok:#1e9e5a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101013;--card:#1a1a1f;--ink:#f3f3f5;--mute:#a0a0ab;--line:#2c2c34}}
+:root[data-theme="dark"]{--bg:#101013;--card:#1a1a1f;--ink:#f3f3f5;--mute:#a0a0ab;--line:#2c2c34}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,Tahoma,sans-serif;line-height:1.6}
+.hide{display:none!important}
+nav.top{background:var(--nav);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.logo{font-weight:800;font-size:22px;letter-spacing:1px;margin-inline-end:auto;cursor:pointer;display:flex;align-items:center;gap:8px}
+.logo b{width:22px;height:22px;background:var(--or);border-radius:5px 5px 5px 0;display:inline-block;transform:skewX(-10deg)}
+nav.top button{font:inherit;color:#ddd;background:none;border:0;padding:6px 10px;cursor:pointer;border-radius:8px}
+nav.top button.on{color:var(--or);font-weight:600}
+.badge{background:var(--or);color:#fff;border-radius:10px;padding:0 7px;font-size:12px;margin-inline-start:4px}
+main{max-width:960px;margin:auto;padding:16px}
+.hero{background:var(--nav);color:#fff;border-radius:16px;padding:34px 24px;margin-bottom:16px;background-image:radial-gradient(circle at 15% 20%,#ff7a0033,transparent 45%)}
+.hero small{color:var(--or);font-weight:600}.hero h1{font-size:38px;line-height:1.25;margin:8px 0}
+.hero h1 span{color:var(--or)}.hero p{color:#c9c9d1;max-width:420px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 22px;background:var(--or);color:#fff;cursor:pointer}
+.btn.dk{background:transparent;border:1px solid #555;color:#fff}.btn.gh{background:transparent;border:1px solid var(--line);color:var(--ink);padding:6px 12px;font-weight:600}
+.btn:disabled{opacity:.4;cursor:not-allowed}.btn.w{width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.svc{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}.svc b{color:var(--or)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;cursor:pointer;color:var(--mute)}
+.drop strong{color:var(--ink)}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}.seg button{font:inherit;flex:1;min-width:90px;padding:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;cursor:pointer}
+.seg button[aria-pressed=true]{border-color:var(--or);background:#ff7a0018;color:var(--or);font-weight:700}
+input[type=text],input[type=tel],input[type=number]{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:700px){.two{grid-template-columns:1fr}.hero h1{font-size:30px}}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row .or{color:var(--or);font-weight:700}.mute{color:var(--mute);font-size:13px}
+.tot{font-size:20px;font-weight:800}
+.steps{display:flex;gap:8px;margin-bottom:14px}.steps span{flex:1;text-align:center;padding:6px;border-radius:8px;background:var(--line);font-size:13px}.steps .on{background:var(--or);color:#fff;font-weight:700}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
+.opt[aria-checked=true]{border-color:var(--or);background:#ff7a0012}
+.tl{list-style:none;margin:12px 0;padding:0 18px 0 0;border-inline-start:0;border-right:3px solid var(--line)}
+.tl li{position:relative;padding:0 14px 16px 0;color:var(--mute)}
+.tl li:before{content:"";position:absolute;right:-11px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--line)}
+.tl li.d{color:var(--ink);font-weight:600}.tl li.d:before{background:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{border-radius:12px;padding:14px;color:#fff;font-weight:700}.stat b{display:block;font-size:30px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px;text-align:start;border-bottom:1px solid var(--line)}
+.sc{overflow-x:auto}td input{width:80px}
+.st{border-radius:20px;padding:2px 10px;font-size:12px;color:#fff;font-weight:600;background:#e08a00}.st.s1{background:#2a7de1}.st.s2{background:var(--ok)}.st.s3{background:#777}
+</style></head><body>
+<nav class="top" aria-label="التنقل">
+<div class="logo" onclick="go('home')"><b></b>PRINTO</div>
+<button data-v="home" onclick="go('home')">الرئيسية</button>
+<button data-v="print" onclick="go('print')">اطبع</button>
+<button data-v="track" onclick="go('track')">تتبع طلبك</button>
+<button data-v="cart" onclick="go('cart')">السلة<span class="badge" id="cn">0</span></button>
+<button data-v="admin" onclick="go('admin')">لوحة المطبعة</button>
+</nav>
+<main>
+
+<section id="v-home">
+<div class="hero"><small>سريع · جودة عالية · توصيل لحد بيتك</small>
+<h1>اطبع اللي محتاجه<br><span>وقت ما تحتاجه</span></h1>
+<p>ارفع ملفاتك، اختار الطباعة، وإحنا نتولى الباقي. مطبعة في الشروق.</p>
+<p><button class="btn" onclick="go('print')">ابدأ الطباعة</button> <button class="btn dk" onclick="go('track')">تتبع طلبك</button></p></div>
+<h2>خدماتنا</h2>
+<div class="grid">
+<div class="svc"><b>مستندات</b><br>A4 / A3، أبيض وأسود أو ألوان</div>
+<div class="svc"><b>تدبيس وتجليد</b><br>تدبيس، سلك، أو غلاف</div>
+<div class="svc"><b>دفع سهل</b><br>عند الاستلام أو فوري أو محفظة</div>
+<div class="svc"><b>إشعارات</b><br>نبلغك أول ما طلبك يجهز</div></div>
+</section>
+
+<section id="v-print" class="hide">
+<div class="steps"><span class="on">1 ارفع وظبّط</span><span>2 السلة</span><span>3 الدفع</span></div>
+<div class="two"><div>
+<div class="card"><h2>ارفع ملفك</h2>
+<div class="drop" tabindex="0" role="button" onclick="fi.click()" onkeydown="if(event.key==='Enter')fi.click()"><strong>اسحب الملف هنا أو اضغط للاختيار</strong><br>PDF فقط، حتى 25 ميجا</div>
+<input type="file" id="fi" accept="application/pdf" class="hide">
+<p class="mute" id="finfo">لسه مفيش ملف.</p>
+<label for="pages">عدد الصفحات</label><input type="number" id="pages" min="1" placeholder="بيتحسب تلقائي"></div></div>
+<div class="card"><h2>اختيارات الطباعة</h2>
+<label>المقاس</label><div class="seg" data-k="size"><button aria-pressed="true" data-v="A4">A4</button><button aria-pressed="false" data-v="A3">A3</button></div>
+<label>اللون</label><div class="seg" data-k="color"><button aria-pressed="true" data-v="bw">أبيض وأسود</button><button aria-pressed="false" data-v="col">ألوان</button></div>
+<label>الطباعة</label><div class="seg" data-k="side"><button aria-pressed="true" data-v="1">وش واحد</button><button aria-pressed="false" data-v="2">وش وضهر</button></div>
+<label>التشطيب (اختياري)</label><div class="seg" data-k="fin"><button aria-pressed="true" data-v="none">بدون</button><button aria-pressed="false" data-v="staple">تدبيس</button><button aria-pressed="false" data-v="bind">تجليد</button></div>
+<label for="copies">عدد النسخ</label><input type="number" id="copies" min="1" value="1">
+<p class="row"><span id="brk" class="mute">ارفع ملف علشان نحسب السعر.</span><span class="tot"><span id="pp">0</span> جنيه</span></p>
+<button class="btn w" id="add" disabled>أضف للسلة</button></div></div>
+</section>
+
+<section id="v-cart" class="hide">
+<div class="steps"><span>1 ارفع وظبّط</span><span class="on">2 السلة</span><span>3 الدفع</span></div>
+<div class="card"><h2>سلتك</h2><div id="items"></div>
+<p class="row"><span>المجموع</span><span class="tot"><span id="sub">0</span> جنيه</span></p>
+<button class="btn w" id="tocheck" onclick="go('checkout')">كمّل للدفع</button>
+<p><button class="btn gh" onclick="go('print')">+ أضف ملف تاني</button></p></div>
+</section>
+
+<section id="v-checkout" class="hide">
+<div class="steps"><span>1 ارفع وظبّط</span><span>2 السلة</span><span class="on">3 الدفع</span></div>
+<div class="two"><div class="card"><h2>بياناتك</h2>
+<label for="nm">الاسم</label><input type="text" id="nm" autocomplete="name">
+<label for="ph">الموبايل</label><input type="tel" id="ph" inputmode="tel" placeholder="01xxxxxxxxx" autocomplete="tel">
+<label>الاستلام</label>
+<div class="opt" role="radio" aria-checked="true" tabindex="0" data-g="dl" data-v="pick"><div><b>استلام من المطبعة</b><div class="mute">جاهز خلال ساعتين تقريبًا. مجانًا</div></div></div>
+<div class="opt" role="radio" aria-checked="false" tabindex="0" data-g="dl" data-v="ship"><div><b>توصيل</b><div class="mute">خلال يوم – 15 جنيه</div></div></div>
+<div id="adrw" class="hide"><label for="adr">العنوان</label><input type="text" id="adr" placeholder="الشروق، الحي، رقم المبنى"></div></div>
+<div class="card"><h2>طريقة الدفع</h2>
+<div class="opt" role="radio" aria-checked="true" tabindex="0" data-g="py" data-v="الدفع عند الاستلام"><b>الدفع عند الاستلام</b></div>
+<div class="opt" role="radio" aria-checked="false" tabindex="0" data-g="py" data-v="فيزا / ماستركارد"><b>فيزا / ماستركارد</b></div>
+<div class="opt" role="radio" aria-checked="false" tabindex="0" data-g="py" data-v="فوري"><b>فوري</b></div>
+<div class="opt" role="radio" aria-checked="false" tabindex="0" data-g="py" data-v="محفظة (فودافون كاش وغيرها)"><b>محفظة موبايل</b></div>
+<p class="row"><span>الإجمالي</span><span class="tot"><span id="gt">0</span> جنيه</span></p>
+<button class="btn w" onclick="place()">أكّد الطلب</button>
+<p class="mute">لا استرجاع بعد بدء الطباعة. الدفع الأونلاين هنا تجريبي.</p></div></div>
+</section>
+
+<section id="v-track" class="hide">
+<div class="card"><h2>تتبع طلبك</h2><div style="display:flex;gap:8px"><input type="text" id="tn" placeholder="رقم الأوردر مثلًا 1001" inputmode="numeric"><button class="btn" onclick="track()">تتبع</button></div>
+<div id="tres"></div></div>
+</section>
+
+<section id="v-admin" class="hide">
+<div class="stats"><div class="stat" style="background:var(--or)"><b id="s0">0</b>طلبات جديدة</div><div class="stat" style="background:#2a7de1"><b id="s1">0</b>بيتطبع</div><div class="stat" style="background:var(--ok)"><b id="s2">0</b>اتسلم</div></div>
+<div class="card"><h2>الطلبات</h2><div class="sc"><table><thead><tr><th>#</th><th>العميل</th><th>الطلب</th><th>السعر</th><th>الحالة</th></tr></thead><tbody id="ords"></tbody></table></div><p class="mute" id="emp">مفيش طلبات لسه.</p></div>
+<div class="card"><h2>الأسعار (جنيه للصفحة)</h2><div class="sc"><table><thead><tr><th>النوع</th><th>وش</th><th>وش وضهر</th></tr></thead><tbody id="pt"></tbody></table></div>
+<div class="grid"><div><label for="sp">تدبيس للنسخة</label><input type="number" id="sp" step="0.5" min="0"></div><div><label for="bp">تجليد للنسخة</label><input type="number" id="bp" step="0.5" min="0"></div></div></div>
+</section>
+</main>
+
+<script>
+const DEF={p:{"A4-bw":[1.5,1.2],"A4-col":[5,4.5],"A3-bw":[4,3.5],"A3-col":[10,9]},staple:2,bind:10,ship:15};
+const NM={"A4-bw":"A4 أبيض وأسود","A4-col":"A4 ألوان","A3-bw":"A3 أبيض وأسود","A3-col":"A3 ألوان"};
+const ST=["جديد","بيتطبع","جاهز للاستلام","تم التسليم"];
+const FIN={none:"بدون",staple:"تدبيس",bind:"تجليد"};
+const $=i=>document.getElementById(i);
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let cfg=ld('pr_cfg',DEF),orders=ld('pr_orders',[]),cart=[],opt={size:'A4',color:'bw',side:'1',fin:'none'},fname='',ch={dl:'pick',py:'الدفع عند الاستلام'};
+const V=['home','print','cart','checkout','track','admin'];
+function go(v){V.forEach(x=>$('v-'+x).classList.toggle('hide',x!==v));
+ document.querySelectorAll('nav.top button').forEach(b=>b.classList.toggle('on',b.dataset.v===v||(v==='checkout'&&b.dataset.v==='cart')));
+ if(v==='cart')rCart();if(v==='checkout')rCheck();if(v==='admin')rAdmin();scrollTo(0,0)}
+document.querySelectorAll('.seg').forEach(s=>s.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ s.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));opt[s.dataset.k]=b.dataset.v;calc()}));
+['pages','copies'].forEach(i=>$(i).addEventListener('input',calc));
+function price(pages,copies,o){const per=cfg.p[o.size+'-'+o.color][o.side==='2'?1:0];const f=o.fin==='staple'?cfg.staple:o.fin==='bind'?cfg.bind:0;
+ return{per,f,total:Math.round((pages*per+f)*copies*100)/100}}
+function calc(){const pages=+$('pages').value||0,copies=Math.max(1,+$('copies').value||1),r=price(pages,copies,opt);
+ $('pp').textContent=r.total;$('add').disabled=!pages;
+ $('brk').textContent=pages?`${pages} ص × ${r.per} × ${copies} نسخة`+(r.f?` + ${FIN[opt.fin]} ${r.f*copies}`:''):'ارفع ملف علشان نحسب السعر.';return{pages,copies,total:r.total}}
+async function count(f){const b=await f.arrayBuffer();try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ return(await pdfjsLib.getDocument({data:b.slice(0)}).promise).numPages}catch(e){const m=new TextDecoder('latin1').decode(b).match(/\/Type\s*\/Page(?!s)/g);return m?m.length:0}}
+$('fi').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;
+ if(!/\.pdf$/i.test(f.name)){$('finfo').textContent='لازم الملف يكون PDF.';return}
+ if(f.size>26214400){$('finfo').textContent='الملف أكبر من 25 ميجا.';return}
+ $('finfo').textContent='بنعدّ الصفحات...';const n=await count(f);fname=f.name;$('pages').value=n||'';
+ $('finfo').textContent=n?`${f.name}: ${n} صفحة`:'مقدرناش نعدّ الصفحات، اكتب العدد بإيدك.';calc()});
+$('add').addEventListener('click',()=>{const c=calc();cart.push({file:fname||'ملف',pages:c.pages,copies:c.copies,o:{...opt},total:c.total});
+ $('cn').textContent=cart.length;fname='';$('pages').value='';$('finfo').textContent='لسه مفيش ملف.';$('fi').value='';calc();go('cart')});
+const sub=()=>cart.reduce((a,x)=>a+x.total,0);
+function rCart(){$('items').innerHTML=cart.length?cart.map((x,i)=>`<div class="row"><div><b>${esc(x.file)}</b><div class="mute">${x.o.size} · ${x.o.color==='bw'?'أبيض وأسود':'ألوان'} · ${x.o.side==='2'?'وش وضهر':'وش واحد'} · ${FIN[x.o.fin]} · ${x.copies} نسخة · ${x.pages} ص</div></div><div><span class="or">${x.total} جنيه</span> <button class="btn gh" onclick="rm(${i})" aria-label="احذف">حذف</button></div></div>`).join(''):'<p class="mute">السلة فاضية. ابدأ بملف.</p>';
+ $('sub').textContent=sub();$('tocheck').disabled=!cart.length}
+function rm(i){cart.splice(i,1);$('cn').textContent=cart.length;rCart()}
+document.addEventListener('click',e=>{const o=e.target.closest('.opt');if(!o)return;
+ document.querySelectorAll(`.opt[data-g="${o.dataset.g}"]`).forEach(x=>x.setAttribute('aria-checked',x===o));ch[o.dataset.g]=o.dataset.v;rCheck()});
+document.addEventListener('keydown',e=>{if(e.key===' '&&e.target.classList.contains('opt')){e.preventDefault();e.target.click()}});
+function rCheck(){$('adrw').classList.toggle('hide',ch.dl!=='ship');$('gt').textContent=sub()+(ch.dl==='ship'?cfg.ship:0)}
+function place(){const nm=$('nm').value.trim(),ph=$('ph').value.trim(),adr=$('adr').value.trim();
+ if(!nm||!/^01[0-9]{9}$/.test(ph)){alert('اكتب الاسم ورقم موبايل صحيح (11 رقم يبدأ بـ 01).');return}
+ if(ch.dl==='ship'&&!adr){alert('اكتب عنوان التوصيل.');return}
+ const o={id:1001+orders.length,nm,ph,adr:ch.dl==='ship'?adr:'',dl:ch.dl,py:ch.py,items:cart,total:sub()+(ch.dl==='ship'?cfg.ship:0),st:0,t:new Date().toLocaleString('ar-EG')};
+ orders.push(o);sv('pr_orders',orders);cart=[];$('cn').textContent=0;$('tn').value=o.id;go('track');track(true)}
+function track(fresh){const o=orders.find(x=>x.id===+$('tn').value.trim().replace('#',''));
+ $('tres').innerHTML=!o?'<p class="mute">مفيش أوردر بالرقم ده على الجهاز ده.</p>':
+ `${fresh?`<p style="color:var(--ok);font-weight:700">تم تسجيل طلبك. رقم الأوردر ${o.id}</p>`:''}<h2>أوردر #${o.id}</h2><p class="mute">${o.t} · ${o.items.length} ملف · ${o.total} جنيه · ${esc(o.py)}</p>
+ <ul class="tl">${ST.map((s,i)=>`<li class="${i<=o.st?'d':''}">${s}</li>`).join('')}</ul>`}
+function rAdmin(){[0,1,2].forEach(i=>$('s'+i).textContent=orders.filter(o=>i===2?o.st>=2:o.st===i).length);
+ $('emp').classList.toggle('hide',!!orders.length);
+ $('ords').innerHTML=orders.slice().reverse().map(o=>`<tr><td>${o.id}</td><td>${esc(o.nm)}<br><span class="mute">${esc(o.ph)}${o.adr?'<br>'+esc(o.adr):''}</span></td><td>${o.items.map(x=>esc(x.file)+' ('+x.pages+'ص×'+x.copies+')').join('<br>')}<br><span class="mute">${o.dl==='ship'?'توصيل':'استلام'}</span></td><td>${o.total}<br><span class="mute">${esc(o.py)}</span></td><td><span class="st s${o.st}">${ST[o.st]}</span><br>${o.st<3?`<button class="btn gh" onclick="adv(${o.id})">${['ابدأ الطباعة','جاهز','تم التسليم'][o.st]}</button>`:''}</td></tr>`).join('');
+ $('pt').innerHTML=Object.keys(NM).map(k=>`<tr><td>${NM[k]}</td>${[0,1].map(i=>`<td><input type="number" step="0.25" min="0" value="${cfg.p[k][i]}" aria-label="${NM[k]}" onchange="sp('${k}',${i},this.value)"></td>`).join('')}</tr>`).join('');
+ $('sp').value=cfg.staple;$('bp').value=cfg.bind}
+function adv(id){const o=orders.find(x=>x.id===id);if(o&&o.st<3){o.st++;sv('pr_orders',orders);rAdmin()}}
+function sp(k,i,v){cfg.p[k][i]=parseFloat(v)||0;sv('pr_cfg',cfg);calc()}
+$('sp').addEventListener('change',e=>{cfg.staple=+e.target.value||0;sv('pr_cfg',cfg)});
+$('bp').addEventListener('change',e=>{cfg.bind=+e.target.value||0;sv('pr_cfg',cfg)});
+calc();go('home');
+</script></body></html>
